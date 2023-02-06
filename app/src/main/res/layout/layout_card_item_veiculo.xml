@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_veiculo_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10sp"
+    app:cardCornerRadius="10sp"
+
+    android:background="@drawable/dialog_bg">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/card_image_veiculo_id"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/card_placa_veiculo_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/icon_veiculo" />
+
+        <TextView
+            android:id="@+id/card_placa_veiculo_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Placa: "
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/card_image_veiculo_id"
+            app:layout_constraintTop_toBottomOf="@+id/card_name_veiculo_id" />
+
+        <TextView
+            android:id="@+id/card_name_veiculo_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="name veiculo"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/card_image_veiculo_id"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/card_tipo_veiculo_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Tipo:"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/card_image_veiculo_id"
+            app:layout_constraintTop_toBottomOf="@+id/card_placa_veiculo_id" />
+
+        <ImageButton
+            android:id="@+id/btn_menu_v"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ic_baseline_settings_24"
+            android:padding="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
