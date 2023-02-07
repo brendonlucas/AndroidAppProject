@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -44,6 +45,7 @@ public class FragmentOrdem_1 extends Fragment {
     List<Ordem> ordemsItens1;
     public static RecycleVOrdemAdapter recycleVOrdemAdapterA1;
     public static String SHARED_PREFERENCES = "DadosUser";
+    SwipeRefreshLayout refreshOrdem1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,15 +56,34 @@ public class FragmentOrdem_1 extends Fragment {
 
         recyclerView = view.findViewById(R.id.RecycleOrdem1);
         ordemsItens1 = new ArrayList<>();
+        refreshOrdem1 = view.findViewById(R.id.refresh_ordem_1);
 
         int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
         if (id_instituicao != 0){
             GetOrdem1Request();
+            refreshOrdem1.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (internetIsConnected()){
+                        GetOrdem1Request();
+                    }
+                }
+            });
+
         }else {
             // colocar informe de sem instituição
         }
 
         return view;
+    }
+
+    public boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void GetOrdem1Request() {
@@ -75,6 +96,7 @@ public class FragmentOrdem_1 extends Fragment {
         StringRequest jsonArrayRequest = new StringRequest (Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                ordemsItens1 = new ArrayList<>();
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i<jsonArray.length(); i++){
@@ -88,7 +110,6 @@ public class FragmentOrdem_1 extends Fragment {
                             }catch (JSONException e){
                                 e.printStackTrace();
                             }
-
                             if (ordemObject.getString("status").toString().equals("3")){
                                 ordemItem.setPk(ordemObject.getInt("pk"));
                                 ordemItem.setSolicitante(solicitanteDATA.getString("name").toString());
@@ -97,12 +118,12 @@ public class FragmentOrdem_1 extends Fragment {
                                 ordemItem.setData_solicitacao(ordemObject.getString("data_solicitacao").toString());
                                 ordemsItens1.add(ordemItem);
                             }
-
-
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
+
                     }
+                    refreshOrdem1.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

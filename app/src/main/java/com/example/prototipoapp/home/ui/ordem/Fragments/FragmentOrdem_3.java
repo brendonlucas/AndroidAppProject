@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -42,6 +43,7 @@ public class FragmentOrdem_3 extends Fragment {
     List<Ordem> ordemsItens3;
     public static RecycleVOrdemAdapter recycleVOrdemAdapterA3;
     public static String SHARED_PREFERENCES = "DadosUser";
+    SwipeRefreshLayout refreshOrdem3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
