@@ -53,16 +53,37 @@ public class FragmentOrdem_3 extends Fragment {
 
         recyclerView3 = view.findViewById(R.id.RecycleOrdem3);
         ordemsItens3 = new ArrayList<>();
+        refreshOrdem3 = view.findViewById(R.id.refreshOrdem3);
 
         int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
         if (id_instituicao != 0){
-            GetOrdem3Request();
+            if (internetIsConnected()){
+                GetOrdem3Request();
+            }
+
+            refreshOrdem3.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (internetIsConnected()){
+                        GetOrdem3Request();
+                    }
+                }
+            });
         }else {
             // colocar informe de sem instituição
         }
 
 
         return view;
+    }
+
+    public boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void GetOrdem3Request() {
@@ -75,6 +96,7 @@ public class FragmentOrdem_3 extends Fragment {
         StringRequest jsonArrayRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                ordemsItens3 = new ArrayList<>();
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i<jsonArray.length(); i++){
@@ -103,7 +125,7 @@ public class FragmentOrdem_3 extends Fragment {
                             e.printStackTrace();
                         }
                     }
-
+                    refreshOrdem3.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

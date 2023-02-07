@@ -206,10 +206,11 @@ public class VAdapter extends RecyclerView.Adapter<VAdapter.ViewHolder> implemen
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         RequestQueue MyRequestQueue = Volley.newRequestQueue(inflater.getContext());
-        String url = "https://brendonlulucas.pythonanywhere.com/" + veiculoItems.get(position).getPk() + "/API/APIveiculo_detail";
+        String url = "https://brendonlulucas.pythonanywhere.com/" + veiculoItems.get(position).getPk() + "/API/APIveiculo_detail/";
         StringRequest MyStringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Toast.makeText(view.getContext(), veiculoItems.get(position).getPk()+"" , Toast.LENGTH_SHORT).show();
                 veiculoItems.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, veiculoItems.size());
@@ -241,46 +242,4 @@ public class VAdapter extends RecyclerView.Adapter<VAdapter.ViewHolder> implemen
         };
         MyRequestQueue.add(MyStringRequest);
     }
-
-//    public void PutVeiculoVolley(String campo, String dados, int position, View view) {
-//        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-//
-//        RequestQueue queue = Volley.newRequestQueue(inflater.getContext());
-//        String url = "https://brendonlulucas.pythonanywhere.com/" + veiculoItems.get(position).getPk() + "/API/APIveiculo_detail";
-//
-//        try {
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("stringValue", "abc");
-//            jsonObject.put("doubleValue", 13.066);
-//            jsonObject.put("integerValue", 120);
-//            jsonObject.put("booleanValue", true);
-//            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Toast.makeText(view.getContext(), "Foi completo", Toast.LENGTH_SHORT).show();
-//                        }
-//                    },
-//                    new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//
-//                        }
-//                    }
-//            ) {
-//                @Override       //Send Header
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    Map<String, String> params = new HashMap<>();
-//                    params.put("Authorization", "Token " + sharedPreferences.getString("TOKEN", "null"));
-//
-//                    return params;
-//                }
-//            };
-//            // Adding request to request queue
-//            queue.add(request);
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

@@ -66,11 +66,18 @@ public class OrdemDetailActivity extends AppCompatActivity {
                 Toast.makeText(OrdemDetailActivity.this, "Abrir um popup menu com dados", Toast.LENGTH_SHORT).show();
             }
         });
+        if (internetIsConnected()){
+            GetOrdemRequest();
+        }
 
-        GetOrdemRequest();
     }
-    private void setValuesVeiculo(JSONObject response) {
-
+    public boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private void setValuesInTextView(JSONObject response) {

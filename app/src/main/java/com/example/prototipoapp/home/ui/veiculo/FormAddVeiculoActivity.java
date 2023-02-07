@@ -283,7 +283,17 @@ public class FormAddVeiculoActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("name", name_veiculo);
                 params.put("placa", placa);
-                params.put("tipo", tipo);
+                String tipo_v = "0";
+                if (tipo.equals("Moto")){
+                    tipo_v = "1";
+                }else if (tipo.equals("Carro")){
+                    tipo_v = "2";
+                }else if (tipo.equals("Caminhão")){
+                    tipo_v = "3";
+                }else if (tipo.equals("Ônibus")){
+                    tipo_v = "4";
+                }
+                params.put("tipo", tipo_v);
                 params.put("qtd_pessoas", carga);
                 return params;
             }

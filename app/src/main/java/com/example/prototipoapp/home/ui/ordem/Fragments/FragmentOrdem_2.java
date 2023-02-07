@@ -53,15 +53,36 @@ public class FragmentOrdem_2 extends Fragment {
 
         recyclerView2 = view.findViewById(R.id.RecycleOrdem2);
         ordemsItens2 = new ArrayList<>();
+        refreshOrdem2 = view.findViewById(R.id.refreshOrdem_2);
 
         int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
         if (id_instituicao != 0){
-            GetOrdem2Request();
+            if (internetIsConnected()){
+                GetOrdem2Request();
+            }
+
+            refreshOrdem2.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (internetIsConnected()){
+                        GetOrdem2Request();
+                    }
+                }
+            });
         }else {
             // colocar informe de sem instituição
         }
 
         return view;
+    }
+
+    public boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void GetOrdem2Request() {
@@ -74,6 +95,7 @@ public class FragmentOrdem_2 extends Fragment {
         StringRequest jsonArrayRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                ordemsItens2 = new ArrayList<>();
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i<jsonArray.length(); i++){
@@ -97,18 +119,14 @@ public class FragmentOrdem_2 extends Fragment {
                                 ordemItem.setData_solicitacao(ordemObject.getString("data_solicitacao").toString());
                                 ordemsItens2.add(ordemItem);
                             }
-
-
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
                     }
-
-
+                    refreshOrdem2.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 initRecycleViewO();
             }
         }, new Response.ErrorListener() {

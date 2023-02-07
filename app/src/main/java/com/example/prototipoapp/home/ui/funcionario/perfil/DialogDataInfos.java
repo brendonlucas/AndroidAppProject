@@ -169,7 +169,7 @@ public class DialogDataInfos extends DialogFragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+
                 String body = "";
                 try {
                     body = new String(error.networkResponse.data, "UTF-8");

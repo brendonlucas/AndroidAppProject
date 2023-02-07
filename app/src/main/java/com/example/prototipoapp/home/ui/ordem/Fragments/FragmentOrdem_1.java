@@ -60,7 +60,9 @@ public class FragmentOrdem_1 extends Fragment {
 
         int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
         if (id_instituicao != 0){
-            GetOrdem1Request();
+            if (internetIsConnected()){
+                GetOrdem1Request();
+            }
             refreshOrdem1.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {

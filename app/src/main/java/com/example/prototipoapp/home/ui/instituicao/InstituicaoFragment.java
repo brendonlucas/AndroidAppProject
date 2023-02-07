@@ -61,23 +61,37 @@ public class InstituicaoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
         binding = FragmentInstituicaoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         setHasOptionsMenu(true);
+
         SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
         if (sharedPreferences.getInt("CARGO_ID", 0) == 1 &&
                 sharedPreferences.getInt("INSTITUICAO_ID", 0) == 0) {
             binding.Contente555.setVisibility(View.INVISIBLE);
         } else if (sharedPreferences.getInt("INSTITUICAO_ID", 0) != 0) {
             binding.Contente555.setVisibility(View.VISIBLE);
-            GetInstituicaoDetailsRequests();
+            if (internetIsConnected()){
+
+                GetInstituicaoDetailsRequests();
+            }
 
         }
         int id_user = sharedPreferences.getInt("INSTITUICAO_ID", 0);
         Toast.makeText(getContext(), id_user+"", Toast.LENGTH_SHORT).show();
 
         return root;
+    }
+
+    public boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     void set_info_inst(JSONObject responseJSON) {
