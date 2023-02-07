@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,6 +25,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -41,10 +43,12 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -494,6 +498,17 @@ public class PerfilActivity extends AppCompatActivity {
                 System.out.println("Authorization:" + "Token " + sharedPreferences.getString("TOKEN", "null"));
                 return params;
             }
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    // solution 1:
+                    String jsonString = new String(response.data, "UTF-8");
+
+                    return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
         };
         queue.add(jsonArrayRequest);
     }
@@ -553,9 +568,11 @@ public class PerfilActivity extends AppCompatActivity {
                 imageEscolhida = getFileDataFromDrawable(bitmap);
                 if (dialog_creat){
                     alerta_names.dismiss();
-                    showDialogImage2(bitmap);
+                    alertDD(bitmap);
+//                    showDialogImage2(bitmap);
                 }else{
-                    showDialogImage2(bitmap);
+                    alertDD(bitmap);
+//                    showDialogImage2(bitmap);
                     dialog_creat = true;
                 }
 
@@ -569,26 +586,20 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void showDialogImage2(Bitmap bitmap){
-
-        AlertDialog alerta_name;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         ImageView image = new ImageView(this);
         Button btn_new_img = new Button(this);
         LinearLayout container_img_btn = new LinearLayout(this);
         container_img_btn.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-//        lp.setMargins(50, 0, 50,0);
-
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         btn_new_img.setText("Escolher outra imagem");
         image.setImageBitmap(bitmap);
-
+        image.setLayoutParams(lp);
         builder.setTitle("Selecionar imagem");
         container_img_btn.addView(image,lp);
-        container_img_btn.addView(btn_new_img,lp);
-
+        container_img_btn.addView(btn_new_img);
         builder.setView(container_img_btn);
-
 
         builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
@@ -612,6 +623,41 @@ public class PerfilActivity extends AppCompatActivity {
         alerta_names.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alerta_names.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
 
+        alerta_names.show();
+    }
+
+    @SuppressLint("MissingInflatedId")
+    public void alertDD(Bitmap bitmap){
+        LayoutInflater factory = LayoutInflater.from(this);
+        View deleteDialogView = factory.inflate(R.layout.dialog_open_image, null);
+        ImageView image;
+        image = deleteDialogView.findViewById(R.id.img_getted);
+        image.setImageBitmap(bitmap);
+
+        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
+        deleteDialog.setView(deleteDialogView);
+        deleteDialogView.findViewById(R.id.send_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendImageProfileData();
+                alerta_names.dismiss();
+            }
+        });
+        deleteDialogView.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alerta_names.dismiss();
+            }
+        });
+        deleteDialogView.findViewById(R.id.btn_get_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImageToProfile();
+            }
+        });
+        alerta_names = deleteDialog.create();
+        alerta_names.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alerta_names.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
         alerta_names.show();
     }
 

@@ -519,7 +519,7 @@
                 android:id="@+id/content_footer"
                 android:layout_width="0dp"
                 android:layout_height="100sp"
-                android:alpha="0.8"
+                android:alpha="0.7"
                 android:background="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

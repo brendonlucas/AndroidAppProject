@@ -73,6 +73,7 @@
         <activity
             android:name=".home.LateralSlideOptionsActivity"
             android:exported="false"
+            android:screenOrientation="nosensor"
             android:label="@string/title_activity_lateral_slide_options"
             android:theme="@style/Theme.PrototipoAPP.NoActionBar">
             <meta-data
