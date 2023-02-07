@@ -107,7 +107,7 @@ public class LateralSlideOptionsActivity extends AppCompatActivity implements Na
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.lateral_slide_options, menu);
+//        getMenuInflater().inflate(R.menu.lateral_slide_options, menu);
 
         return true;
     }

@@ -47,10 +47,18 @@ public class FragmentOrdem_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ordem_2, container, false);
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         recyclerView2 = view.findViewById(R.id.RecycleOrdem2);
         ordemsItens2 = new ArrayList<>();
-        GetOrdem2Request();
+
+        int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
+        if (id_instituicao != 0){
+            GetOrdem2Request();
+        }else {
+            // colocar informe de sem instituição
+        }
+
         return view;
     }
 

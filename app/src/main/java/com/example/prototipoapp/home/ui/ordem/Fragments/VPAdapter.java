@@ -8,37 +8,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-//public class VPAdapter extends FragmentStateAdapter {
-//
-//
-//    public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
-//        super(fragmentActivity);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public Fragment createFragment(int position) {
-//        switch (position) {
-//            case 0:
-//                return new FragmentOrdem_1();
-//            case 1:
-//                return new FragmentOrdem_2();
-//            case 3:
-//                return new FragmentOrdem_3();
-//            default:
-//                return new FragmentOrdem_1();
-//        }
-//
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return 3;
-//    }
-//}
-
-
-
 public class VPAdapter extends FragmentPagerAdapter {
 
     private final ArrayList<Fragment> fragmentArrayList = new ArrayList<>();

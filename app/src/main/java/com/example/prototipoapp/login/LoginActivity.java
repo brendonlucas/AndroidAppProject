@@ -10,10 +10,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.prototipoapp.R;
@@ -36,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         username = findViewById(R.id.IDUserName);
         password = findViewById(R.id.IDPassword);
     }
@@ -59,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Preencha os dados", Toast.LENGTH_SHORT).show();
         }
 //        PostStringVolley(str_username, str_password);
-
     }
 
 
@@ -69,31 +70,29 @@ public class LoginActivity extends AppCompatActivity {
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 try {
-
                     String usuarioDataJson = new JSONObject(response).getString("dados");
                     String instDataJson = new JSONObject(response).getString("instituicao");
                     String userDataJson = new JSONObject(usuarioDataJson).getString("user");
 
-
-
-
                     String token = new JSONObject(response).getString("token");
                     String nome = new JSONObject(usuarioDataJson).getString("name");
-                    int instituicao_id = new JSONObject(instDataJson).getInt("pk");
+                    int instituicao_id;
+                    try {
+                        instituicao_id = new JSONObject(instDataJson).getInt("pk");
+                    } catch (JSONException e) {
+                        instituicao_id = 0;
+                    }
+
                     int pk_user = new JSONObject(usuarioDataJson).getInt("pk");
 
                     int cargo_user_id = new JSONObject(usuarioDataJson).getInt("cargo");
                     saveDados(token, nome, instituicao_id,usuarioDataJson,cargo_user_id,instDataJson,pk_user);
 
-                    Toast.makeText(LoginActivity.this, nome + token, Toast.LENGTH_LONG).show();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
-
                 System.out.println(response);
             }
         }, new Response.ErrorListener() {
@@ -109,7 +108,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (statusCode.equals("400")) {
                     Toast.makeText(LoginActivity.this, "Usuário e/ou senha inválidos", Toast.LENGTH_SHORT).show();
                 }
-
                 System.out.println(body);
             }
         }) {
@@ -119,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                 MyData.put("password", password);
                 return MyData;
             }
-
 
         };
         MyRequestQueue.add(MyStringRequest);

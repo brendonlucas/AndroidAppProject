@@ -1,5 +1,6 @@
 package com.example.prototipoapp.home.ui.ordem;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.prototipoapp.home.ui.ordem.Fragments.FragmentOrdem_1.recycleVOrdemAdapterA1;
 import static com.example.prototipoapp.home.ui.ordem.Fragments.FragmentOrdem_2.recycleVOrdemAdapterA2;
 import static com.example.prototipoapp.home.ui.ordem.Fragments.FragmentOrdem_3.recycleVOrdemAdapterA3;
@@ -59,6 +60,7 @@ public class OrdemFragment extends Fragment {
 
         binding = FragmentOrdemBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         setHasOptionsMenu(true);
 
 
@@ -81,39 +83,43 @@ public class OrdemFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_search_v, menu);
-        inflater.inflate(R.menu.menu_add_veiculo, menu);
-        MenuItem createVitem = menu.findItem(R.id.id_create_v);
-        createVitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getContext(), FormAddOrdemActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFERENCES,MODE_PRIVATE);
+        int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
+        if (id_instituicao != 0){
+            inflater.inflate(R.menu.menu_search_v, menu);
+            inflater.inflate(R.menu.menu_add_veiculo, menu);
+            MenuItem createVitem = menu.findItem(R.id.id_create_v);
+            createVitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    Intent intent = new Intent(getContext(), FormAddOrdemActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
 //                Toast.makeText(getContext(), "Criar olha so", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
 
-        MenuItem searchitem = menu.findItem(R.id.id_search_vv);
-        SearchView searchView = (SearchView) searchitem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            MenuItem searchitem = menu.findItem(R.id.id_search_vv);
+            SearchView searchView = (SearchView) searchitem.getActionView();
+            searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                recycleVOrdemAdapterA1.getFilter().filter(s);
-                recycleVOrdemAdapterA2.getFilter().filter(s);
-                recycleVOrdemAdapterA3.getFilter().filter(s);
-                return false;
-            }
-        });
-
-
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    recycleVOrdemAdapterA1.getFilter().filter(s);
+                    recycleVOrdemAdapterA2.getFilter().filter(s);
+                    recycleVOrdemAdapterA3.getFilter().filter(s);
+                    return false;
+                }
+            });
+        }else {
+            // colocar informe de sem instituição
+        }
     }
 
 

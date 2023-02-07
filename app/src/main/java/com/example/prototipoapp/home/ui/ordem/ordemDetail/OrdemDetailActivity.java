@@ -57,10 +57,6 @@ public class OrdemDetailActivity extends AppCompatActivity {
         data_s_2 = findViewById(R.id.text_o_data_solicitado_para);
         descri = findViewById(R.id.text_o_descricao);
 
-
-
-//        cardMotorista.setVisibility(View.GONE);
-//        cardVeiculo.setVisibility(View.GONE);
         cardVeiculo = findViewById(R.id.card_veiculo_ordem);
         cardMotorista = findViewById(R.id.card_motorista_ordem);
 

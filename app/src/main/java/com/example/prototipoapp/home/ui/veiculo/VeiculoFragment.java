@@ -1,5 +1,7 @@
 package com.example.prototipoapp.home.ui.veiculo;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,10 +29,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -65,8 +70,6 @@ public class VeiculoFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        VeiculoViewModel galleryViewModel =
-                new ViewModelProvider(this).get(VeiculoViewModel.class);
 
         binding = FragmentVeiculoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -74,21 +77,25 @@ public class VeiculoFragment extends Fragment {
         recyclerView = root.findViewById(R.id.ListVeiculosViewID);
         veiculoItems = new ArrayList<>();
         setHasOptionsMenu(true);
-        if (internetIsConnected()){
-            GetVeiculosRequest();
-        }
-        refreshItensVeiculo = root.findViewById(R.id.RefreshVeiculos);
-        refreshItensVeiculo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (internetIsConnected()){
-                    GetVeiculosRequest();
-                }
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
+        if (id_instituicao != 0){
+            if (internetIsConnected()){
+                GetVeiculosRequest();
             }
-        });
+            refreshItensVeiculo = root.findViewById(R.id.RefreshVeiculos);
+            refreshItensVeiculo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (internetIsConnected()){
+                        GetVeiculosRequest();
+                    }
+                }
+            });
+        }
 
-//        final TextView textView = binding.textVeiculo;
-//        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+
         return root;
     }
 
@@ -116,17 +123,14 @@ public class VeiculoFragment extends Fragment {
                             veiculoItem.setImageUrl(veiculoObject.getString("image").toString());
                             veiculoItem.setTipo(veiculoObject.getInt("tipo"));
                             veiculoItems.add(veiculoItem);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
                     refreshItensVeiculo.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 initRecycleViewV();
             }
         }, new Response.ErrorListener() {
@@ -149,46 +153,56 @@ public class VeiculoFragment extends Fragment {
                 System.out.println("Authorization:" + "Token " + sharedPreferences.getString("TOKEN", "null"));
                 return params;
             }
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    String jsonString = new String(response.data, "UTF-8");
+                    return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
         };
         queue.add(jsonArrayRequest);
-
     }
 
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_search_v, menu);
-        inflater.inflate(R.menu.menu_add_veiculo, menu);
-        MenuItem createVitem = menu.findItem(R.id.id_create_v);
-        createVitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getContext(), FormAddVeiculoActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                Toast.makeText(getContext(), "Criar olha so", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFERENCES,MODE_PRIVATE);
+        int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
+        if (id_instituicao != 0){
+            inflater.inflate(R.menu.menu_search_v, menu);
+            inflater.inflate(R.menu.menu_add_veiculo, menu);
+            MenuItem createVitem = menu.findItem(R.id.id_create_v);
+            createVitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    Intent intent = new Intent(getContext(), FormAddVeiculoActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    Toast.makeText(getContext(), "Criar olha so", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
 
-        MenuItem searchitem = menu.findItem(R.id.id_search_vv);
-        SearchView searchView = (SearchView) searchitem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            MenuItem searchitem = menu.findItem(R.id.id_search_vv);
+            SearchView searchView = (SearchView) searchitem.getActionView();
+            searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                vadapter.getFilter().filter(s);
-                return false;
-            }
-        });
-
-
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    vadapter.getFilter().filter(s);
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
