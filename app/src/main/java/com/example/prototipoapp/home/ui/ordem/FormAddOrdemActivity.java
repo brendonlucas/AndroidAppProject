@@ -129,7 +129,6 @@ public class FormAddOrdemActivity extends AppCompatActivity {
         MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setTitleText("Escolha o Horario").build();
-
         materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -145,34 +144,26 @@ public class FormAddOrdemActivity extends AppCompatActivity {
     private void showDataPickerDialog() {
         MaterialDatePicker materialDatePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Escolha a data").build();
-
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
-
                 Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 utc.setTimeInMillis((Long) selection);
                 String date = calendarToDate(getApplicationContext(), utc, "dd-MM-yyyy");
-
-
                 data_picker.setText("" + date);
-
             }
         });
         materialDatePicker.show(getSupportFragmentManager(), "TAG");
-
     }
 
     public static String calendarToDate(Context context, Calendar calendar, String dateFormat) {
         if (calendar == null) {
             return null;
         }
-
         Locale locale = context.getResources().getConfiguration().locale;
         SimpleDateFormat df = new SimpleDateFormat(dateFormat, locale);
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
         df.setTimeZone(timeZone);
-
         Date d = calendar.getTime();
         return df.format(d);
     }
@@ -199,7 +190,6 @@ public class FormAddOrdemActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         return true;
     }
 

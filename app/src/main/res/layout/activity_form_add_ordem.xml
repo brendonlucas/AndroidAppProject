@@ -30,42 +30,15 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_name_v"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="50"
-                app:helperText="Requerido*"
-                app:helperTextTextColor="#F83131"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.526"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:startIconDrawable="@drawable/ic_baseline_edit_24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_content_name_v"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nome"
-                    android:maxLength="50"
-                    tools:ignore="TouchTargetSizeCheck" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_type_t"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 app:helperText="Requerido*"
                 app:helperTextTextColor="#F83131"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_name_v"
+                app:layout_constraintTop_toTopOf="parent"
                 app:startIconDrawable="@drawable/ic_baseline_boxs_24">
 
                 <AutoCompleteTextView
@@ -84,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:helperText="Requerido*"
+                android:visibility="gone"
                 app:helperTextTextColor="#F83131"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
