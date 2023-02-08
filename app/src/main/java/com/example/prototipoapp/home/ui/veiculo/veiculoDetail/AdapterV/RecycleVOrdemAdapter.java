@@ -21,9 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.tiles.material.Button;
 
@@ -38,6 +41,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.prototipoapp.R;
+import com.example.prototipoapp.home.ui.funcionario.perfil.DialogDataInfos;
+import com.example.prototipoapp.home.ui.ordem.GerenciaOrdem.ConfirmOrdem;
 import com.example.prototipoapp.home.ui.ordem.Ordem;
 import com.example.prototipoapp.home.ui.ordem.ordemDetail.OrdemDetailActivity;
 import com.example.prototipoapp.home.ui.veiculo.veiculoDetail.EditVeiculoActivity;
@@ -124,6 +129,11 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
         menupop.getMenu().add("Confirmar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(view.getContext(), ConfirmOrdem.class);
+                intent.putExtra("id_ordem", ordemsItems.get(position).getPk());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                view.getContext().startActivity(intent);
+
                 return false;
             }
         });
@@ -142,6 +152,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
         });
         menupop.show();
     }
+
 
     @Override
     public int getItemCount() {

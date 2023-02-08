@@ -20,6 +20,13 @@
         android:theme="@style/Theme.PrototipoAPP"
         tools:targetApi="31">
         <activity
+            android:name=".home.ui.ordem.GerenciaOrdem.ConfirmOrdem"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".home.ui.ordem.FormAddOrdemActivity"
             android:exported="false">
             <meta-data
@@ -73,8 +80,8 @@
         <activity
             android:name=".home.LateralSlideOptionsActivity"
             android:exported="false"
-            android:screenOrientation="nosensor"
             android:label="@string/title_activity_lateral_slide_options"
+            android:screenOrientation="nosensor"
             android:theme="@style/Theme.PrototipoAPP.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
