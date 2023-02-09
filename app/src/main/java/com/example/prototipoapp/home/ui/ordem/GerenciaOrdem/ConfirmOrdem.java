@@ -66,7 +66,7 @@ import java.util.TimeZone;
 
 public class ConfirmOrdem extends AppCompatActivity {
     StepView stepView;
-    Button btn_nxt, btn_previs;
+    Button btn_nxt, btn_previs, btn_send_form_confirm;
     ConstraintLayout box1, box2, box3, box4, box5;
     int index = 0;
 
@@ -129,6 +129,9 @@ public class ConfirmOrdem extends AppCompatActivity {
         box3 = findViewById(R.id.content_form_2);
         box4 = findViewById(R.id.content_select_data);
         box5 = findViewById(R.id.content_resumo);
+
+        btn_send_form_confirm = findViewById(R.id.btn_send_form_confirm);
+        btn_send_form_confirm.setVisibility(View.GONE);
 
         box2.setVisibility(View.GONE);
         box3.setVisibility(View.GONE);
@@ -425,6 +428,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 box3.setVisibility(View.GONE);
                 box4.setVisibility(View.GONE);
                 box5.setVisibility(View.GONE);
+                btn_send_form_confirm.setVisibility(View.GONE);
                 break;
             case 1:
                 box2.setVisibility(View.VISIBLE);
@@ -433,6 +437,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 box3.setVisibility(View.GONE);
                 box4.setVisibility(View.GONE);
                 box5.setVisibility(View.GONE);
+                btn_send_form_confirm.setVisibility(View.GONE);
                 break;
             case 2:
                 box3.setVisibility(View.VISIBLE);
@@ -441,6 +446,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 box2.setVisibility(View.GONE);
                 box4.setVisibility(View.GONE);
                 box5.setVisibility(View.GONE);
+                btn_send_form_confirm.setVisibility(View.GONE);
                 break;
             case 3:
                 box4.setVisibility(View.VISIBLE);
@@ -449,6 +455,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 box2.setVisibility(View.GONE);
                 box3.setVisibility(View.GONE);
                 box5.setVisibility(View.GONE);
+                btn_send_form_confirm.setVisibility(View.GONE);
                 break;
             case 4:
                 box5.setVisibility(View.VISIBLE);
@@ -457,6 +464,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 box2.setVisibility(View.GONE);
                 box3.setVisibility(View.GONE);
                 box4.setVisibility(View.GONE);
+                btn_send_form_confirm.setVisibility(View.VISIBLE);
                 break;
         }
     }

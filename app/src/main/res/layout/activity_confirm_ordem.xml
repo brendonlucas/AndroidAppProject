@@ -12,47 +12,50 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_v_cons"
+        android:padding="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/previs_btn"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_send_form_confirm"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="#E14848"
-            android:text="Voltar"
-            app:icon="@drawable/ic_baseline_chevron_left_24"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="50dp"
+            android:text="Enviar"
+            app:icon="@drawable/ic_baseline_send_24"
+            app:iconGravity="textEnd"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/step_view" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.shuhart.stepview.StepView
             android:id="@+id/step_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+
             android:layout_marginTop="5dp"
-
-
+            android:background="@drawable/dialog_bg"
+            android:backgroundTint="#FFFFFF"
             android:padding="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_send_form_confirm"
             app:sv_animationType="Line"
             app:sv_doneCircleColor="#49BC4D"
             app:sv_doneCircleRadius="12dp"
             app:sv_doneStepLineColor="#4BC150"
             app:sv_doneStepMarkColor="#FFFFFF"
+
             app:sv_nextStepLineColor="#191919"
             app:sv_nextTextColor="@color/black"
             app:sv_selectedCircleColor="@color/black"
             app:sv_selectedCircleRadius="12dp"
-
             app:sv_selectedStepNumberColor="#FFFFFF"
             app:sv_selectedTextColor="#FFFFFF"
             app:sv_stepLineWidth="1sp"
@@ -73,6 +76,20 @@
             app:iconGravity="end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/step_view" />
+
+        <Button
+            android:id="@+id/previs_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="#E14848"
+            android:text="Voltar"
+            app:icon="@drawable/ic_baseline_chevron_left_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/step_view" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
