@@ -92,6 +92,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.custom_list_view);
         AdapterListItem adapterListItem = new AdapterListItem(getApplicationContext(),optionsList,icList);
+
         listView.setAdapter(adapterListItem);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

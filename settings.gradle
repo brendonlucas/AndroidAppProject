@@ -10,7 +10,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
+//allprojects {
+//    repositories {
+//
+//        maven { url 'https://jitpack.io' }
+//    }
+//}
 rootProject.name = "prototipoAPP"
 include ':app'
