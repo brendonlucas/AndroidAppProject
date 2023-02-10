@@ -54,6 +54,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,12 +72,15 @@ public class ConfirmOrdem extends AppCompatActivity {
     ConstraintLayout box1, box2, box3, box4, box5;
     int index = 0;
 
-    Spinner spinner,spinner_motorista;
+    Spinner spinner, spinner_motorista;
 
     List<VeiculoItem> veiculoList;
     ArrayList<String> veiculoNamesList;
     List<User> motoristasList;
     List<String> motoristasNamesList;
+    User motoristaSelecionado;
+    VeiculoItem veiculoSelecionado;
+
     public static String SHARED_PREFERENCES = "DadosUser";
 
     TextInputEditText data_picker, time_picker;
@@ -98,6 +103,7 @@ public class ConfirmOrdem extends AppCompatActivity {
         motoristasList = new ArrayList<>();
         motoristasNamesList = new ArrayList<>();
 
+        GetOrdemRequest();
         GetVeiculosRequest();
         GetMotoristasRequest();
 
@@ -192,7 +198,6 @@ public class ConfirmOrdem extends AppCompatActivity {
     }
 
 
-
     public void initSpinnerAdapter() {
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, veiculoNamesList));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -211,8 +216,10 @@ public class ConfirmOrdem extends AppCompatActivity {
                 placa_txt.setText(veiculoList.get(i).getPlaca());
                 Picasso.get().load(veiculoList.get(i).getImageUrl()).into(img_car);
                 ctnt_info_car.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in));
-
+                veiculoSelecionado = veiculoList.get(i);
+                Toast.makeText(ConfirmOrdem.this, veiculoSelecionado.getName(), Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -237,8 +244,10 @@ public class ConfirmOrdem extends AppCompatActivity {
                 contato_txt.setText(motoristasList.get(i).getContato());
 //                Picasso.get().load(motoristasList.get(i).getImageUrl()).into(img_car);
                 ctnt_info_moto.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in));
-
+                motoristaSelecionado = motoristasList.get(i);
+                Toast.makeText(ConfirmOrdem.this, motoristaSelecionado.getName(), Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -368,7 +377,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                     for (int i = 0; i < responseJSON.length(); i++) {
                         try {
                             JSONObject funcObject = responseJSON.getJSONObject(i);
-                            if (funcObject.getString("cargo").equals("4")){
+                            if (funcObject.getString("cargo").equals("4")) {
                                 User funcItem = new User();
                                 funcItem.setPk(funcObject.getInt("pk"));
                                 funcItem.setName(funcObject.getString("name").toString());
@@ -406,6 +415,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 params.put("Authorization", "Token " + sharedPreferences.getString("TOKEN", "null"));
                 return params;
             }
+
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
                 try {
@@ -469,6 +479,84 @@ public class ConfirmOrdem extends AppCompatActivity {
         }
     }
 
+
+    public void GetOrdemRequest() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+        Bundle bundle = getIntent().getExtras();
+        int id_ordem = bundle.getInt("id_ordem");
+        String url = getString(R.string.dominio) + id_ordem + getString(R.string.GET_DETAILS_ORDEM);
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest jsonArrayRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject responseJSON = new JSONObject(response);
+                    setValuesInTextView(responseJSON);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                String body = "";
+                try {
+                    body = new String(error.networkResponse.data, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // exception
+                }
+                System.out.println(body);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Token " + sharedPreferences.getString("TOKEN", "null"));
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                return params;
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    // solution 1:
+                    String jsonString = new String(response.data, "UTF-8");
+
+                    return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
+        };
+        queue.add(jsonArrayRequest);
+    }
+
+    public void setValuesInTextView(JSONObject responseJSON) {
+        TextView name_soli, data_em, data_para, tipo_soli, qtd_vaga_soli, descri_soli;
+        ConstraintLayout ctnt_carga;
+        name_soli = findViewById(R.id.txt_data_solicitante_info);
+        data_em = findViewById(R.id.txt_data_SE_info);
+        data_para = findViewById(R.id.txt_data_SP_info);
+        tipo_soli = findViewById(R.id.txt_data_tipo_info);
+        qtd_vaga_soli = findViewById(R.id.txt_data_vaga_info);
+        descri_soli = findViewById(R.id.txt_data_descricao_info);
+        ctnt_carga = findViewById(R.id.d4);
+
+        try {
+            JSONObject solicitanteDATA = responseJSON.getJSONObject("solicitante");
+            name_soli.setText(solicitanteDATA.getString("name").toString());
+            data_em.setText(convertDate(responseJSON.getString("data_solicitacao")));
+            data_para.setText(convertDate(responseJSON.getString("data_solicitado")));
+            descri_soli.setText(responseJSON.getString("descricao"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -477,5 +565,19 @@ public class ConfirmOrdem extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public String convertDate(String data_to_converte){
+        DateFormat formatUS = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = formatUS.parse(data_to_converte);
+            DateFormat formatBR = new SimpleDateFormat("dd-MM-yyyy");
+            return formatBR.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return data_to_converte;
     }
 }
