@@ -6,11 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
@@ -18,10 +16,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +33,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.prototipoapp.R;
 import com.example.prototipoapp.home.ui.funcionario.User;
-import com.example.prototipoapp.home.ui.funcionario.perfil.AdapterListItem;
-import com.example.prototipoapp.home.ui.ordem.FormAddOrdemActivity;
 import com.example.prototipoapp.home.ui.veiculo.VeiculoItem;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -72,7 +66,7 @@ public class ConfirmOrdem extends AppCompatActivity {
     ConstraintLayout box1, box2, box3, box4, box5;
     int index = 0;
 
-    Spinner spinner, spinner_motorista;
+    CustomSearchableSpinner spinner, spinner_motorista;
 
     List<VeiculoItem> veiculoList;
     ArrayList<String> veiculoNamesList;
@@ -95,8 +89,8 @@ public class ConfirmOrdem extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        spinner = findViewById(R.id.spinner_veiculo);
-        spinner_motorista = findViewById(R.id.spinner_motorista);
+        spinner = (CustomSearchableSpinner) findViewById(R.id.spinner_veiculo);
+        spinner_motorista = (CustomSearchableSpinner) findViewById(R.id.spinner_motorista);
 
         veiculoNamesList = new ArrayList<>();
         veiculoList = new ArrayList<>();
@@ -139,6 +133,24 @@ public class ConfirmOrdem extends AppCompatActivity {
         btn_send_form_confirm = findViewById(R.id.btn_send_form_confirm);
         btn_send_form_confirm.setVisibility(View.GONE);
 
+        btn_send_form_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id_veiculo, id_motorista, data_1, data_2;
+                id_veiculo = Integer.toString(veiculoSelecionado.getPk());
+                id_motorista = Integer.toString(motoristaSelecionado.getPk());
+                TextInputEditText edt_data_1 = findViewById(R.id.form_text_date);
+                TextInputEditText edt_data_2 = findViewById(R.id.form_text_time);
+                data_1 = edt_data_1.getText().toString();
+                data_2 = edt_data_2.getText().toString();
+                if (!id_veiculo.equals("") && !id_motorista.equals("") && !data_1.equals("") &&
+                        !data_2.equals("")) {
+                    PostDataConfirmVolley(id_motorista, id_veiculo, data_1, data_2);
+
+                }
+            }
+        });
+
         box2.setVisibility(View.GONE);
         box3.setVisibility(View.GONE);
         box4.setVisibility(View.GONE);
@@ -158,18 +170,46 @@ public class ConfirmOrdem extends AppCompatActivity {
         btn_nxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (index < 5 && index < 4) {
-                    index++;
-                    stepView.go(index, true);
-
-                    setGoneVisible(index);
-
-                    Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
-                    if (index == 4) {
-                        btn_nxt.setVisibility(View.INVISIBLE);
+                    boolean pode_passar = false;
+                    switch (index) {
+                        case 0:
+                            pode_passar = true;
+                            break;
+                        case 1:
+                            if (veiculoSelecionado != null) {
+                                pode_passar = true;
+                            }
+                            break;
+                        case 2:
+                            if (motoristaSelecionado != null) {
+                                pode_passar = true;
+                            }
+                            break;
+                        case 3:
+                            TextInputEditText edt_data_1 = findViewById(R.id.form_text_date);
+                            TextInputEditText edt_data_2 = findViewById(R.id.form_text_time);
+                            String data_1 = edt_data_1.getText().toString();
+                            String data_2 = edt_data_2.getText().toString();
+                            if (!data_1.equals("") && !data_2.equals("")) {
+                                pode_passar = true;
+                            }
+                            break;
                     }
-                    if (index > 0) {
-                        btn_previs.setVisibility(View.VISIBLE);
+                    if (pode_passar) {
+                        index++;
+                        stepView.go(index, true);
+
+                        setGoneVisible(index);
+
+                        Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
+                        if (index == 4) {
+                            btn_nxt.setVisibility(View.INVISIBLE);
+                        }
+                        if (index > 0) {
+                            btn_previs.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
@@ -200,9 +240,11 @@ public class ConfirmOrdem extends AppCompatActivity {
 
     public void initSpinnerAdapter() {
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, veiculoNamesList));
+        spinner.setTitle("Selecione");
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                spinner.isCountriesSpinnerOpen = false;
                 TextView nome_car, placa_txt;
                 ImageView img_car;
                 ConstraintLayout ctnt_info_car;
@@ -479,7 +521,6 @@ public class ConfirmOrdem extends AppCompatActivity {
         }
     }
 
-
     public void GetOrdemRequest() {
         SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -548,14 +589,15 @@ public class ConfirmOrdem extends AppCompatActivity {
         try {
             JSONObject solicitanteDATA = responseJSON.getJSONObject("solicitante");
             name_soli.setText(solicitanteDATA.getString("name").toString());
-            data_em.setText(convertDate(responseJSON.getString("data_solicitacao")));
-            data_para.setText(convertDate(responseJSON.getString("data_solicitado")));
+            data_em.setText(convertDate(responseJSON.getString("data_solicitacao"),1));
+            data_para.setText(convertDate(responseJSON.getString("data_solicitado"),1));
             descri_soli.setText(responseJSON.getString("descricao"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -567,17 +609,88 @@ public class ConfirmOrdem extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public String convertDate(String data_to_converte){
-        DateFormat formatUS = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = formatUS.parse(data_to_converte);
-            DateFormat formatBR = new SimpleDateFormat("dd-MM-yyyy");
-            return formatBR.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public String convertDate(String data_to_converte , int type) {
+        if (type == 1){
+            DateFormat formatUS = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = formatUS.parse(data_to_converte);
+                DateFormat formatBR = new SimpleDateFormat("dd-MM-yyyy");
+                return formatBR.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else if(type == 2){
+            DateFormat formatUS = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = null;
+            try {
+                date = formatUS.parse(data_to_converte);
+                DateFormat formatBR = new SimpleDateFormat("yyyy-MM-dd");
+                return formatBR.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return data_to_converte;
+    }
+
+    public void PostDataConfirmVolley(String motorista_id, String veiculo_id, String data_1, String data2) {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        RequestQueue MyRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        Bundle bundle = getIntent().getExtras();
+        int id_ordem = bundle.getInt("id_ordem");
+        String url = getString(R.string.dominio) + id_ordem + getString(R.string.CONFIRM_ORDEM);
+        StringRequest MyStringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+//                String body = "";
+//                try {
+//                    body = new String(error.networkResponse.data, "UTF-8");
+//                } catch (UnsupportedEncodingException e) {
+//                    // exception
+//                }
+//                if (statusCode.equals("400")) {
+//                    Toast.makeText(binding.getRoot().getContext(), body, Toast.LENGTH_SHORT).show();
+//                }
+//
+//                System.out.println(body);
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("motorista", motorista_id);
+                MyData.put("veiculo", veiculo_id);
+                MyData.put("data_marcada", convertDate(data_1,2));
+                MyData.put("horario_marcado", data2);
+                return MyData;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Token " + sharedPreferences.getString("TOKEN", "null"));
+                return params;
+            }
+        };
+        MyRequestQueue.add(MyStringRequest);
+    }
+
+
+    @Override
+    protected void onPause() {
+        dismissSpinner();
+        super.onPause();
+    }
+    private void dismissSpinner() {
+        Fragment searchableSpinnerDialog = getFragmentManager().findFragmentByTag("TAG");
+        if (searchableSpinnerDialog != null && searchableSpinnerDialog.isAdded()) {
+            getFragmentManager().beginTransaction().remove(searchableSpinnerDialog).commit();
+        }
     }
 }

@@ -372,7 +372,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12">
 
-                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    <com.example.prototipoapp.home.ui.ordem.GerenciaOrdem.CustomSearchableSpinner
                         android:id="@+id/spinner_veiculo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -501,7 +501,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView14">
 
-                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    <com.example.prototipoapp.home.ui.ordem.GerenciaOrdem.CustomSearchableSpinner
                         android:id="@+id/spinner_motorista"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

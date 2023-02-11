@@ -29,5 +29,6 @@
     <string name="REMOVE_ORDEM">/API/APIGetOrdemInstituicao/</string>
     <string name="GET_VEICULOS">/API/APIveiculos/</string>
     <string name="GET_FUNCIONARIOS">/API/GetAllFuncInst/</string>
+    <string name="CONFIRM_ORDEM">/API/APIGConfirmOrdem/</string>
 
 </resources>
