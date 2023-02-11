@@ -26,7 +26,7 @@
     <string name="dominio">https://brendonlulucas.pythonanywhere.com/</string>
     <string name="CREATE_ORDEM">/API/APICreateOrdem/</string>
     <string name="GET_DETAILS_ORDEM">/API/APIGetOrdemInstituicao/</string>
-    <string name="REMOVE_ORDEM">/API/APIGetOrdemInstituicao/</string>
+    <string name="REMOVE_ORDEM">/API/APICreateOrdem/</string>
     <string name="GET_VEICULOS">/API/APIveiculos/</string>
     <string name="GET_FUNCIONARIOS">/API/GetAllFuncInst/</string>
     <string name="CONFIRM_ORDEM">/API/APIGConfirmOrdem/</string>

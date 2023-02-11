@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdapter.ViewHolder> implements Filterable {
     public static String SHARED_PREFERENCES = "DadosUser";
@@ -126,23 +127,56 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
     }
     private void showPopUpMenu(View view, int position) {
         final PopupMenu menupop = new PopupMenu(view.getContext(), view);
-        menupop.getMenu().add("Confirmar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        menupop.getMenu().add("Gerênciar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(view.getContext(), ConfirmOrdem.class);
-                intent.putExtra("id_ordem", ordemsItems.get(position).getPk());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                view.getContext().startActivity(intent);
+                switch (ordemsItems.get(position).getStatus().toString()){
+                    case "1":
+                        Toast.makeText(view.getContext(), "Set nada acabou", Toast.LENGTH_SHORT).show();
+                        break;
+                    case "2":
+                        Toast.makeText(view.getContext(), "Set iniciar viajem", Toast.LENGTH_SHORT).show();
+                        // iniciar viajen
+                        break;
+                    case "3":
+                        Intent intent = new Intent(view.getContext(), ConfirmOrdem.class);
+                        intent.putExtra("id_ordem", ordemsItems.get(position).getPk());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        view.getContext().startActivity(intent);
+                        break;
+                    case "4":
+                        Toast.makeText(view.getContext(), "Set finalizar", Toast.LENGTH_SHORT).show();
+                        // em curso
+                        break;
+                    case "5":
+                        Toast.makeText(view.getContext(), "Set recusar", Toast.LENGTH_SHORT).show();
+                        // "Recusado";
+                        break;
+                }
+
+
 
                 return false;
             }
         });
-        menupop.getMenu().add("Recusar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return false;
-            }
-        });
+        if (ordemsItems.get(position).getStatus().toString().equals("3") ||
+                ordemsItems.get(position).getStatus().toString().equals("2")){
+            menupop.getMenu().add("Modificar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return false;
+                }
+            });
+        }
+
+        if (ordemsItems.get(position).getStatus().toString().equals("3")){
+            menupop.getMenu().add("Recusar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return false;
+                }
+            });
+        }
         menupop.getMenu().add("Apagar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -211,7 +245,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
 
 
     private void showPopMenuConfirmDelete(int position, View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
         builder.setTitle("Remover Ordem?");
         builder.setMessage("O item será apagado e não poderá ser recuperado!");
         builder.setIcon(R.drawable.ic_baseline_warning_24);
