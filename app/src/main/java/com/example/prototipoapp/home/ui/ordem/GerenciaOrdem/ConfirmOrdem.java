@@ -194,6 +194,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                             String data_2 = edt_data_2.getText().toString();
                             if (!data_1.equals("") && !data_2.equals("")) {
                                 pode_passar = true;
+                                setDadosResumoFinal();
                             }
                             break;
                     }
@@ -512,7 +513,7 @@ public class ConfirmOrdem extends AppCompatActivity {
             case 4:
                 box5.setVisibility(View.VISIBLE);
                 box5.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in));
-                box1.setVisibility(View.GONE);
+                box1.setVisibility(View.VISIBLE);
                 box2.setVisibility(View.GONE);
                 box3.setVisibility(View.GONE);
                 box4.setVisibility(View.GONE);
@@ -589,8 +590,8 @@ public class ConfirmOrdem extends AppCompatActivity {
         try {
             JSONObject solicitanteDATA = responseJSON.getJSONObject("solicitante");
             name_soli.setText(solicitanteDATA.getString("name").toString());
-            data_em.setText(convertDate(responseJSON.getString("data_solicitacao"),1));
-            data_para.setText(convertDate(responseJSON.getString("data_solicitado"),1));
+            data_em.setText(convertDate(responseJSON.getString("data_solicitacao"), 1));
+            data_para.setText(convertDate(responseJSON.getString("data_solicitado"), 1));
             descri_soli.setText(responseJSON.getString("descricao"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -609,8 +610,8 @@ public class ConfirmOrdem extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public String convertDate(String data_to_converte , int type) {
-        if (type == 1){
+    public String convertDate(String data_to_converte, int type) {
+        if (type == 1) {
             DateFormat formatUS = new SimpleDateFormat("yyyy-MM-dd");
             Date date = null;
             try {
@@ -620,7 +621,7 @@ public class ConfirmOrdem extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else if(type == 2){
+        } else if (type == 2) {
             DateFormat formatUS = new SimpleDateFormat("dd-MM-yyyy");
             Date date = null;
             try {
@@ -666,7 +667,7 @@ public class ConfirmOrdem extends AppCompatActivity {
                 Map<String, String> MyData = new HashMap<String, String>();
                 MyData.put("motorista", motorista_id);
                 MyData.put("veiculo", veiculo_id);
-                MyData.put("data_marcada", convertDate(data_1,2));
+                MyData.put("data_marcada", convertDate(data_1, 2));
                 MyData.put("horario_marcado", data2);
                 return MyData;
             }
@@ -687,10 +688,45 @@ public class ConfirmOrdem extends AppCompatActivity {
         dismissSpinner();
         super.onPause();
     }
+
     private void dismissSpinner() {
         Fragment searchableSpinnerDialog = getFragmentManager().findFragmentByTag("TAG");
         if (searchableSpinnerDialog != null && searchableSpinnerDialog.isAdded()) {
             getFragmentManager().beginTransaction().remove(searchableSpinnerDialog).commit();
         }
+    }
+
+    private void setDadosResumoFinal() {
+        TextView name_v, tipo_v, fabrica_v, name_m, contato_m, status_m , data_m, hora_m;
+        ImageView img_v, img_m;
+        TextInputEditText edt_data_1 = findViewById(R.id.form_text_date);
+        TextInputEditText edt_time_2 = findViewById(R.id.form_text_time);
+
+        name_v = findViewById(R.id.txt_RF_NV);
+        tipo_v = findViewById(R.id.txt_RF_TV);
+        fabrica_v = findViewById(R.id.txt_RF_FV);
+        img_v = findViewById(R.id.img_RF_IV);
+
+        name_m = findViewById(R.id.txt_RF_NM);
+        contato_m = findViewById(R.id.txt_RF_CM);
+        status_m = findViewById(R.id.txt_RF_SM);
+        img_m = findViewById(R.id.img_RF_IM);
+
+        data_m = findViewById(R.id.txt_RF_DM);
+        hora_m = findViewById(R.id.txt_RF_HM);
+
+        name_v.setText(veiculoSelecionado.getName().toString());
+        tipo_v.setText(veiculoSelecionado.getTipo()+"");
+        fabrica_v.setText("Ainda por na Api");
+        Picasso.get().load(veiculoSelecionado.getImageUrl()).into(img_v);
+
+        name_m.setText(motoristaSelecionado.getName().toString());
+        contato_m.setText(motoristaSelecionado.getContato().toString());
+        status_m.setText("Ainda Por na Api");
+//        Picasso.get().load(motoristaSelecionado.getImageUrl()).into(img_m); # ainda por na api
+
+        data_m.setText(edt_data_1.getText());
+        hora_m.setText(edt_time_2.getText());
+
     }
 }
