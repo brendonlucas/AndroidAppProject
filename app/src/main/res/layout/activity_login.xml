@@ -65,13 +65,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.842"
             app:layout_constraintStart_toStartOf="parent"
+
+            app:passwordToggleEnabled="true"
+            app:passwordToggleDrawable="@drawable/show_password_selector"
+            app:startIconDrawable="@drawable/ic_baseline_password_24"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/IDPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Senha" />
+                android:hint="Senha"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -83,7 +88,8 @@
             android:layout_marginRight="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/IDUserName"

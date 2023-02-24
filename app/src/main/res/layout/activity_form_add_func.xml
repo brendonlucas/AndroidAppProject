@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.ui.funcionario.FormAddFuncActivity">
+
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10sp">
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_name_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:helperText="Requerido*"
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.526"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconDrawable="@drawable/ic_baseline_edit_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_add_name_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nome"
+                    android:maxLength="50"
+                    android:inputType="textCapCharacters"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_sobrenome_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:helperText="Requerido*"
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_add_name_user"
+                app:startIconDrawable="@drawable/ic_baseline_edit_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_add_sobrenome_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Sobrenome"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_fullname_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="150"
+                app:helperText="Requerido*"
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_add_sobrenome_user"
+                app:startIconDrawable="@drawable/ic_baseline_edit_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_add_fullname_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nome Completo"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="150" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_cargo_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:helperText="Requerido*"
+
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_add_fullname_user"
+                app:startIconDrawable="@drawable/ic_baseline_edit_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/form_add_cargo_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cargo"
+                    android:inputType="none"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_username_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:helperText="Requerido*"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_add_cargo_user"
+                app:startIconDrawable="@drawable/ic_baseline_account_circle_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_add_username_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nome de Usuário"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="100" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/checkBoxTemSenha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="Senha?"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_add_username_user" />
+
+            <TextView
+                android:id="@+id/aasdasd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Selecione para escolher uma senha para o usuario criado. Se não selecionado sera gerado uma senha padrão"
+                android:textColor="#F83131"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkBoxTemSenha" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_add_password_user"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="20"
+                app:helperText="Requerido*"
+                app:helperTextTextColor="#F83131"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/aasdasd"
+
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/show_password_selector"
+                app:startIconDrawable="@drawable/ic_baseline_password_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_add_password_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Senha"
+                    android:inputType="textPassword"
+                    android:maxLength="20" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

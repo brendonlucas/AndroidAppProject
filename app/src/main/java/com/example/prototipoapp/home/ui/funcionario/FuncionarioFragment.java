@@ -109,10 +109,9 @@ public class FuncionarioFragment extends Fragment {
             createVitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-//                    Intent intent = new Intent(getContext(), FormAddVeiculoActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(intent);
-//                    Toast.makeText(getContext(), "Criar olha so", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), FormAddFuncActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     return false;
                 }
             });

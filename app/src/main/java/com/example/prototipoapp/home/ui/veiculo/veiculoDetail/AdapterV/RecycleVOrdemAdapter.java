@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +67,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
     LayoutInflater inflater;
     List<Ordem> ordemsItems;
     List<Ordem> ordemItemsFull;
-    AlertDialog alerta;
+    AlertDialog alerta, alerta_confirm_2;
 
     public RecycleVOrdemAdapter(Context ctx, List<Ordem> ordemsItems) {
         this.inflater = LayoutInflater.from(ctx);
@@ -125,18 +128,18 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
             }
         });
     }
+
     private void showPopUpMenu(View view, int position) {
         final PopupMenu menupop = new PopupMenu(view.getContext(), view);
         menupop.getMenu().add("Gerênciar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (ordemsItems.get(position).getStatus().toString()){
+                switch (ordemsItems.get(position).getStatus().toString()) {
                     case "1":
                         Toast.makeText(view.getContext(), "Set nada acabou", Toast.LENGTH_SHORT).show();
                         break;
                     case "2":
-                        Toast.makeText(view.getContext(), "Set iniciar viajem", Toast.LENGTH_SHORT).show();
-                        // iniciar viajen
+                        DialogConfirme2(view, position);
                         break;
                     case "3":
                         Intent intent = new Intent(view.getContext(), ConfirmOrdem.class);
@@ -145,6 +148,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
                         view.getContext().startActivity(intent);
                         break;
                     case "4":
+                        DialogConfirmFinalizar(view, position);
                         Toast.makeText(view.getContext(), "Set finalizar", Toast.LENGTH_SHORT).show();
                         // em curso
                         break;
@@ -155,12 +159,11 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
                 }
 
 
-
                 return false;
             }
         });
         if (ordemsItems.get(position).getStatus().toString().equals("3") ||
-                ordemsItems.get(position).getStatus().toString().equals("2")){
+                ordemsItems.get(position).getStatus().toString().equals("2")) {
             menupop.getMenu().add("Modificar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -169,7 +172,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
             });
         }
 
-        if (ordemsItems.get(position).getStatus().toString().equals("3")){
+        if (ordemsItems.get(position).getStatus().toString().equals("3")) {
             menupop.getMenu().add("Recusar").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -270,10 +273,10 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
         int id_instituicao = sharedPreferences.getInt("INSTITUICAO_ID", 0);
 
         String url = inflater.getContext().getString(R.string.dominio) + id_instituicao
-                + inflater.getContext().getString(R.string.REMOVE_ORDEM) ;
+                + inflater.getContext().getString(R.string.REMOVE_ORDEM);
 
         RequestQueue queue = Volley.newRequestQueue(inflater.getContext());
-        StringRequest jsonArrayRequest = new StringRequest (Request.Method.DELETE, url, new Response.Listener<String>() {
+        StringRequest jsonArrayRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(inflater.getContext(), "Item Removido", Toast.LENGTH_SHORT).show();
@@ -290,7 +293,7 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
                 }
                 System.out.println(body);
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -299,5 +302,84 @@ public class RecycleVOrdemAdapter extends RecyclerView.Adapter<RecycleVOrdemAdap
             }
         };
         queue.add(jsonArrayRequest);
+    }
+
+
+    private void DialogConfirme2(View view, int position) {
+        final EditText input = new EditText(view.getRootView().getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
+
+        LinearLayout container = new LinearLayout(view.getRootView().getContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(50, 0, 50, 0);
+        input.setGravity(android.view.Gravity.TOP | android.view.Gravity.LEFT);
+        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setLines(1);
+        input.setMaxLines(1);
+        input.setLayoutParams(lp);
+        input.setHint("----");
+        builder.setTitle("----------");
+        container.addView(input, lp);
+        builder.setView(container);
+
+        builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                String name = input.getText().toString();
+                if (!name.equals("")) {
+//                    PutDataUserVolley("name", name);
+                    Toast.makeText(view.getRootView().getContext(), name, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view.getRootView().getContext(), "Valor invalido", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        alerta_confirm_2 = builder.create();
+        alerta_confirm_2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alerta_confirm_2.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        alerta_confirm_2.show();
+    }
+
+    private void DialogConfirmFinalizar(View view, int position) {
+        final EditText input = new EditText(view.getRootView().getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
+
+        LinearLayout container = new LinearLayout(view.getRootView().getContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(50, 0, 50, 0);
+        input.setGravity(android.view.Gravity.TOP | android.view.Gravity.LEFT);
+        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setLines(1);
+        input.setMaxLines(1);
+        input.setLayoutParams(lp);
+        input.setHint("----");
+        builder.setTitle("Finalizar Ordem");
+        container.addView(input, lp);
+        builder.setView(container);
+
+        builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                String name = input.getText().toString();
+                if (!name.equals("")) {
+//                    PutDataUserVolley("name", name);
+                    Toast.makeText(view.getRootView().getContext(), name, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view.getRootView().getContext(), "Valor invalido", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        alerta_confirm_2 = builder.create();
+        alerta_confirm_2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alerta_confirm_2.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        alerta_confirm_2.show();
     }
 }
